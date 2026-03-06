@@ -1,0 +1,10 @@
+body { margin: 0; font-family: Arial, sans-serif; background: #2a2a2a; color: white; }
+#game-container { position: relative; display: flex; justify-content: center; }
+#game-canvas { border: 2px solid #444; background: #1a1a1a; }
+#ui-overlay {
+    position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8);
+    padding: 15px; border-radius: 8px; min-width: 250px;
+}
+button { background: #4a5568; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+button:hover { background: #63b3ed; }
+#country-stats { font-size: 14px; margin-top: 10px; line-height: 1.4; }
