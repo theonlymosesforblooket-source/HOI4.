@@ -9,18 +9,19 @@
 <body>
     <!-- Game Container -->
     <div id="game-container">
-        <!-- Main Canvas for Map -->
-        <canvas id="game-canvas" width="1200" height="800"></canvas>
-        
-        <!-- UI Overlay (stays on top of canvas) -->
+        <!-- Main Canvas -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- UI Overlay -->
         <div id="ui-overlay">
             <!-- Top Navigation -->
             <nav id="main-nav">
-                <a href="#game" class="nav-btn active">Game</a>
-                <a href="#research" class="nav-btn">Research</a>
-                <a href="#production" class="nav-btn">Production</a>
-                <a href="#diplomacy" class="nav-btn">Diplomacy</a>
+                <a href="#game" class="nav-btn active" data-target="game">Game</a>
+                <a href="#research" class="nav-btn" data-target="research">Research</a>
+                <a href="#production" class="nav-btn" data-target="production">Production</a>
+                <a href="#diplomacy" class="nav-btn" data-target="diplomacy">Diplomacy</a>
             </nav>
+
             <!-- Country Selector -->
             <div id="country-panel">
                 <select id="country-select">
@@ -31,126 +32,139 @@
                 </select>
                 <button id="select-country">Play As</button>
             </div>
-            
-            <!-- Main Control Buttons -->
+
+            <!-- Control Buttons -->
             <div id="control-buttons">
-                <button id="next-day">Next Day (Day <span id="day-counter">1</span>)</button>
+                <button id="next-day">
+                    Next Day (Day <span id="day-counter">1</span>)
+                </button>
                 <button id="next-focus">Select Focus</button>
                 <button id="save-game">Save</button>
             </div>
-        </div>  <!-- End ui-overlay -->
-    </div>    <!-- End game-container -->
-    <!-- Stats Panel -->
-    <div id="stats-panel">
-        <h3>Country Stats</h3>
-        <div class="stat-row">
-            <span>Manpower:</span>
-            <span id="manpower-stat">1,000</span>
-        </div>
-        <div class="stat-row">
-            <span>Civilian Factories:</span>
-            <span id="civ-factories-stat">20</span>
-        </div>
-        <div class="stat-row">
-            <span>Military Factories:</span>
-            <span id="mil-factories-stat">15</span>
-        </div>
-        <div class="stat-row">
-            <span>Steel:</span>
-            <span id="steel-stat">50</span>
-        </div>
-        <div class="stat-row">
-            <span>Divisions:</span>
-            <span id="divisions-stat">20</span>
-        </div>
-        <div class="stat-row">
-            <span>Current Focus:</span>
-            <span id="focus-stat">None</span>
-        </div>
-    </div>
-    <!-- Focus Tree Panel -->
-    <div id="focus-panel" class="panel hidden">
-        <h3>National Focus</h3>
-        <div id="focus-list">
-            <button class="focus-btn" data-focus="rearm">Rearmament (70 days)</button>
-            <button class="focus-btn" data-focus="alliance">Form Alliances</button>
-            <button class="focus-btn" data-focus="industry">Industrial Effort</button>
-            <button class="focus-btn" data-focus="ideology">Rhineland</button>
-        </div>
-        <div id="focus-progress" class="progress-bar">
-            <div id="focus-progress-fill"></div>
-        </div>
-    </div>
-    <!-- Production Panel -->
-    <div id="production-panel" class="panel hidden">
-        <h3>Production Lines</h3>
-        <div class="production-line">
-            <span>Rifles:</span>
-            <span id="rifles-output">+10/day</span>
-            <button class="prod-btn">-</button>
-            <button class="prod-btn">+</button>
-        </div>
-        <div class="production-line">
-            <span>Tanks:</span>
-            <span id="tanks-output">+2/day</span>
-            <button class="prod-btn">-</button>
-            <button class="prod-btn">+</button>
-        </div>
-    </div><!-- Research Panel -->
-    <div id="research-panel" class="panel hidden">
-        <h3>Research</h3>
-        <div class="research-slot">
-            <span>Infantry Weapons I</span>
-            <div class="progress-bar">
-                <div class="progress-fill research-progress"></div>
+
+            <!-- Stats Panel -->
+            <div id="stats-panel">
+                <h3>Country Stats</h3>
+                <div class="stat-row">
+                    <span>Manpower:</span>
+                    <span id="manpower-stat">1,000</span>
+                </div>
+                <div class="stat-row">
+                    <span>Civilian Factories:</span>
+                    <span id="civ-factories-stat">20</span>
+                </div>
+                <div class="stat-row">
+                    <span>Military Factories:</span>
+                    <span id="mil-factories-stat">15</span>
+                </div>
+                <div class="stat-row">
+                    <span>Steel:</span>
+                    <span id="steel-stat">50</span>
+                </div>
+                <div class="stat-row">
+                    <span>Divisions:</span>
+                    <span id="divisions-stat">20</span>
+                </div>
+                <div class="stat-row">
+                    <span>Current Focus:</span>
+                    <span id="focus-stat">None</span>
+                </div>
             </div>
-            <span class="research-timer">35/70 days</span>
-        </div>
-        <div class="research-slot empty">
-            <span>Slot 2 (Empty)</span>
-        </div>
-        <div class="research-slot empty">
-            <span>Slot 3 (Empty)</span>
+
+            <!-- Focus Panel -->
+            <div id="focus-panel" class="panel hidden">
+                <h3>National Focus</h3>
+                <div id="focus-list">
+                    <button class="focus-btn" data-focus="rearm">Rearmament (70 days)</button>
+                    <button class="focus-btn" data-focus="alliance">Form Alliances</button>
+                    <button class="focus-btn" data-focus="industry">Industrial Effort</button>
+                    <button class="focus-btn" data-focus="ideology">Rhineland</button>
+                </div>
+                <div id="focus-progress" class="progress-bar">
+                    <div id="focus-progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Production Panel -->
+            <div id="production-panel" class="panel hidden">
+                <h3>Production Lines</h3>
+                <div class="production-line" data-type="rifles">
+                    <span>Rifles:</span>
+                    <span id="rifles-output">+10/day</span>
+                    <div class="prod-controls">
+                        <button class="prod-btn">-</button>
+                        <button class="prod-btn">+</button>
+                    </div>
+                </div>
+                <div class="production-line" data-type="tanks">
+                    <span>Tanks:</span>
+                    <span id="tanks-output">+2/day</span>
+                    <div class="prod-controls">
+                        <button class="prod-btn">-</button>
+                        <button class="prod-btn">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Panel -->
+            <div id="research-panel" class="panel hidden">
+                <h3>Research</h3>
+                <div class="research-slot">
+                    <span>Infantry Weapons I</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill research-progress"></div>
+                    </div>
+                    <span class="research-timer">35/70 days</span>
+                </div>
+                <div class="research-slot empty">
+                    <span>Slot 2 (Empty)</span>
+                </div>
+                <div class="research-slot empty">
+                    <span>Slot 3 (Empty)</span>
+                </div>
+            </div>
+
+            <!-- Diplomacy Panel -->
+            <div id="diplomacy-panel" class="panel hidden">
+                <h3>Diplomacy</h3>
+                <div class="diplo-option">
+                    <span>Improve Relations: UK</span>
+                    <button class="diplo-btn">Improve (+10 days)</button>
+                </div>
+                <div class="diplo-option">
+                    <span>Trade Steel: USA</span>
+                    <button class="diplo-btn">Trade (-5 steel/day)</button>
+                </div>
+                <div class="diplo-option">
+                    <span>Justify War: Poland</span>
+                    <button class="diplo-btn">Justify (28 days)</button>
+                </div>
+            </div>
+
+            <!-- Map Legend -->
+            <div id="legend">
+                <div class="legend-item">
+                    <div class="color-germany"></div>
+                    <span>Germany</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-usa"></div>
+                    <span>USA</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-uk"></div>
+                    <span>UK</span>
+                </div>
+            </div>
+
+            <!-- Debug Console -->
+            <div id="debug-console" class="hidden">
+                <textarea readonly id="debug-log" rows="8"></textarea>
+                <button id="clear-debug">Clear</button>
+            </div>
         </div>
     </div>
-    <!-- Diplomacy Panel -->
-    <div id="diplomacy-panel" class="panel hidden">
-        <h3>Diplomacy</h3>
-        <div class="diplo-option">
-            <span>Improve Relations: UK</span>
-            <button class="diplo-btn">Improve (+10 days)</button>
-        </div>
-        <div class="diplo-option">
-            <span>Trade Steel: USA</span>
-            <button class="diplo-btn">Trade (-5 steel/day)</button>
-        </div>
-        <div class="diplo-option">
-            <span>Justify War: Poland</span>
-            <button class="diplo-btn">Justify (28 days)</button>
-        </div>
-    </div>
-    <!-- Map Legend -->
-    <div id="legend">
-        <div class="legend-item">
-            <div class="color-germany"></div>
-            <span>Germany</span>
-        </div>
-        <div class="legend-item">
-            <div class="color-usa"></div>
-            <span>USA</span>
-        </div>
-        <div class="legend-item">
-            <div class="color-uk"></div>
-            <span>UK</span>
-        </div>
-    </div>
-    <!-- Debug Console -->
-    <div id="debug-console" class="hidden">
-        <textarea readonly id="debug-log" rows="8"></textarea>
-        <button id="clear-debug">Clear</button>
-    </div>
-    
-    <!-- JavaScript -->
+
     <script src="game.js"></script>
 </body>
 </html>
