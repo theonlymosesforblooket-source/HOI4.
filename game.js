@@ -60,8 +60,8 @@ class HOI4Game {
         // Simple provinces
         this.provinces = [
             { x: 100, y: 200, w: 80, h: 60, owner: 'germany', color: '#ef4444' },
-            { x: 200, y: 300, w: 60, h: 50, owner: 'usa', color: '#3b82f6' },
-            { x: 300, y: 250, w: 70, h: 55, owner: 'uk', color: '#f59e0b' }
+            { x: 220, y: 260, w: 70, h: 55, owner: 'usa', color: '#3b82f6' },
+            { x: 320, y: 220, w: 75, h: 60, owner: 'uk', color: '#f59e0b' }
         ];
 
         // Init systems
@@ -87,31 +87,39 @@ class HOI4Game {
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const target = e.target.dataset.target || e.target.getAttribute('href').substring(1);
+                const target = e.target.dataset.target;
                 this.showPanel(target, e);
             });
         });
 
         // Next Day (with AI tick)
-        document.getElementById('next-day').addEventListener('click', () => {
-            this.nextDay();
-            this.aiTick();
-            document.getElementById('day-counter').textContent = this.day;
-        });
+        const nextDayBtn = document.getElementById('next-day');
+        if (nextDayBtn) {
+            nextDayBtn.addEventListener('click', () => {
+                this.nextDay();
+                this.aiTick();
+                document.getElementById('day-counter').textContent = this.day;
+            });
+        }
 
         // Country selector
-        document.getElementById('select-country').addEventListener('click', () => {
-            this.selectedCountry = document.getElementById('country-select').value;
-            this.updateStats();
-            this.renderMap();
-            this.logDebug(`Switched to ${this.selectedCountry.toUpperCase()}`);
-        });
+        const selectCountryBtn = document.getElementById('select-country');
+        if (selectCountryBtn) {
+            selectCountryBtn.addEventListener('click', () => {
+                const select = document.getElementById('country-select');
+                this.selectedCountry = select.value;
+                this.updateStats();
+                this.renderMap();
+                this.logDebug(`Switched to ${this.selectedCountry.toUpperCase()}`);
+            });
+        }
 
         // Focus buttons
         document.querySelectorAll('.focus-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const focusName = e.target.dataset.focus;
                 const country = this.countries[this.selectedCountry];
+
                 country.focuses.current = focusName;
                 country.focuses.progress = 0;
 
@@ -123,19 +131,20 @@ class HOI4Game {
         });
 
         // Production +/- buttons
-        document.querySelectorAll('.prod-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const line = e.target.closest('.production-line');
-                const type = line.dataset.type; // use data-type in HTML
-                const country = this.countries[this.selectedCountry];
+        document.querySelectorAll('.production-line').forEach(line => {
+            const type = line.dataset.type;
+            const buttons = line.querySelectorAll('.prod-btn');
 
-                if (e.target.textContent === '+') {
-                    country.production[type] += 2;
-                } else {
-                    country.production[type] = Math.max(0, country.production[type] - 2);
-                }
-
-                this.updateStats();
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const country = this.countries[this.selectedCountry];
+                    if (e.target.textContent === '+') {
+                        country.production[type] += 2;
+                    } else {
+                        country.production[type] = Math.max(0, country.production[type] - 2);
+                    }
+                    this.updateStats();
+                });
             });
         });
 
@@ -143,6 +152,15 @@ class HOI4Game {
         const saveBtn = document.getElementById('save-game');
         if (saveBtn) {
             saveBtn.addEventListener('click', () => this.saveGame());
+        }
+
+        // Clear debug
+        const clearDebugBtn = document.getElementById('clear-debug');
+        if (clearDebugBtn) {
+            clearDebugBtn.addEventListener('click', () => {
+                const log = document.getElementById('debug-log');
+                log.value = '';
+            });
         }
     }
 
@@ -218,7 +236,8 @@ class HOI4Game {
             country.focuses.progress++;
 
             const percent = (country.focuses.progress / 70) * 100;
-            document.getElementById('focus-progress-fill').style.width = percent + '%';
+            const bar = document.getElementById('focus-progress-fill');
+            if (bar) bar.style.width = percent + '%';
 
             if (country.focuses.progress >= 70) {
                 const finished = country.focuses.current;
@@ -236,7 +255,7 @@ class HOI4Game {
         country.manpower += Math.floor(country.stability / 10);
         country.milFactories += 0.01 * country.civFactories;
 
-        // Steel consumption from production
+        // Steel consumption
         const steelUse = country.production.rifles * 0.1 + country.production.tanks * 0.5;
         country.steel = Math.max(0, country.steel + 2 - steelUse);
 
@@ -254,24 +273,24 @@ class HOI4Game {
     }
 
     applyFocusEffect(focus) {
-        const country = this.countries[this.selectedCountry];
+        const c = this.countries[this.selectedCountry];
 
         switch (focus) {
             case 'rearm':
-                country.milFactories += 5;
-                country.divisions += 3;
+                c.milFactories += 5;
+                c.divisions += 3;
                 break;
 
             case 'alliance':
-                country.stability += 10;
+                c.stability += 10;
                 break;
 
             case 'industry':
-                country.civFactories += 8;
+                c.civFactories += 8;
                 break;
 
             case 'ideology':
-                country.steel += 20;
+                c.steel += 20;
                 break;
         }
 
@@ -486,3 +505,8 @@ class HOI4Game {
         this.logDebug('Exported game state');
     }
 }
+
+// ⭐ CRITICAL: This boots the game and makes the map render
+window.onload = () => {
+    new HOI4Game();
+};
