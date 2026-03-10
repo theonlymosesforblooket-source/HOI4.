@@ -9,63 +9,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let playerCountry = null;
 
-    function showCountry(tag) {
+    function pickCountry(tag) {
+        playerCountry = tag;
         const c = countries[tag];
 
-        // If no player chosen yet → selecting a country
-        if (!playerCountry) {
-            playerCountry = tag;
-            document.getElementById("info").innerHTML = `
-                <h2>You are now playing as ${c.name}</h2>
-                <p>Factories: ${c.factories}</p>
-                <p>Stability: ${Math.round(c.stability * 100)}%</p>
-                <p>War Support: ${Math.round(c.warSupport * 100)}%</p>
-                <button id="build">Build Factory</button>
-                <button id="propaganda">Propaganda</button>
-            `;
-            enableActions();
-            return;
-        }
-
-        // If player already chosen → just viewing other countries
         document.getElementById("info").innerHTML = `
-            <h2>${c.name}</h2>
+            <h2>You are now playing as ${c.name}</h2>
             <p>Factories: ${c.factories}</p>
             <p>Stability: ${Math.round(c.stability * 100)}%</p>
             <p>War Support: ${Math.round(c.warSupport * 100)}%</p>
+
+            <button id="build">Build Factory</button>
+            <button id="propaganda">Propaganda</button>
         `;
+
+        enableActions();
     }
 
     function enableActions() {
         const c = countries[playerCountry];
 
-        document.getElementById("build").addEventListener("click", () => {
+        document.getElementById("build").onclick = () => {
             c.factories++;
-            updatePlayerPanel();
-        });
+            updatePanel();
+        };
 
-        document.getElementById("propaganda").addEventListener("click", () => {
+        document.getElementById("propaganda").onclick = () => {
             c.warSupport = Math.min(1, c.warSupport + 0.05);
-            updatePlayerPanel();
-        });
+            updatePanel();
+        };
     }
 
-    function updatePlayerPanel() {
+    function updatePanel() {
         const c = countries[playerCountry];
+
         document.getElementById("info").innerHTML = `
             <h2>You are playing as ${c.name}</h2>
             <p>Factories: ${c.factories}</p>
             <p>Stability: ${Math.round(c.stability * 100)}%</p>
             <p>War Support: ${Math.round(c.warSupport * 100)}%</p>
+
             <button id="build">Build Factory</button>
             <button id="propaganda">Propaganda</button>
         `;
+
         enableActions();
     }
 
     document.querySelectorAll(".country").forEach(btn => {
         btn.addEventListener("click", () => {
-            showCountry(btn.dataset.tag);
+            if (!playerCountry) {
+                pickCountry(btn.dataset.tag);
+            } else {
+                // Already picked a country → just show info
+                const c = countries[btn.dataset.tag];
+                document.getElementById("info").innerHTML = `
+                    <h2>${c.name}</h2>
+                    <p>Factories: ${c.factories}</p>
+                    <p>Stability: ${Math.round(c.stability * 100)}%</p>
+                    <p>War Support: ${Math.round(c.warSupport * 100)}%</p>
+                `;
+            }
         });
     });
 
