@@ -371,26 +371,6 @@ function applyFocusReward(tag, focusName) {
 }
 
 /* ============================================================
-   MONTHLY TICK HANDLER
-============================================================ */
-
-let tickCounter = 0;
-
-function monthlyTickHandler() {
-    tickCounter++;
-    if (tickCounter >= 30) {
-        tickCounter = 0;
-        advanceMonth();
-    }
-}
-
-/* Hook into the main loop from Part 1 */
-const oldLoop = gameLoop;
-gameLoop = function() {
-    monthlyTickHandler();
-    oldLoop();
-};
-/* ============================================================
    PART 3 — AI, WAR SYSTEM, SOUND EFFECTS
 ============================================================ */
 
