@@ -1,24 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>EU Strategy Spoof</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="game-root">
+        <header id="top-bar">
+            <h1>EU Strategy Spoof</h1>
+            <div id="top-info">
+                <span id="current-country-label">No country selected</span>
+                <span id="date-label">Jan 1936</span>
+            </div>
+        </header>
 
-<h1>EU Strategy Spoof</h1>
+        <main id="main-layout">
+            <!-- LEFT: MAP -->
+            <section id="map-section">
+                <canvas id="eu-map" width="800" height="500">
+                    Your browser does not support canvas.
+                </canvas>
+                <div id="map-overlay-hint">
+                    Click a country on the map to inspect it.
+                </div>
+            </section>
 
-<p>Select a country to play as:</p>
+            <!-- RIGHT: UI PANELS -->
+            <section id="ui-section">
+                <!-- COUNTRY INFO -->
+                <div id="country-panel" class="panel">
+                    <h2>Country</h2>
+                    <div id="country-info">
+                        <p>Select a country on the map.</p>
+                    </div>
+                    <div id="country-actions">
+                        <button id="play-as-btn" disabled>Play as this country</button>
+                    </div>
+                </div>
 
-<div id="map">
-    <button class="country" data-tag="GER">Germany</button>
-    <button class="country" data-tag="FRA">France</button>
-    <button class="country" data-tag="UK">United Kingdom</button>
-    <button class="country" data-tag="SOV">Soviet Union</button>
-</div>
+                <!-- ECONOMY PANEL -->
+                <div id="economy-panel" class="panel">
+                    <h2>Economy</h2>
+                    <div id="economy-info">
+                        <p>Factories: <span id="factories-value">0</span></p>
+                        <p>Civilian: <span id="civ-factories-value">0</span></p>
+                        <p>Military: <span id="mil-factories-value">0</span></p>
+                        <p>GDP (spoof): <span id="gdp-value">0</span></p>
+                        <p>Stability: <span id="stability-value">0%</span></p>
+                    </div>
+                    <div id="economy-actions">
+                        <button id="build-civ-btn" disabled>Build Civilian Factory</button>
+                        <button id="build-mil-btn" disabled>Build Military Factory</button>
+                        <button id="tax-policy-btn" disabled>Adjust Tax Policy</button>
+                    </div>
+                </div>
 
-<div id="info"></div>
+                <!-- FOCUS TREE PANEL -->
+                <div id="focus-panel" class="panel">
+                    <h2>Focus Tree</h2>
+                    <div id="focus-tree">
+                        <!-- Focus buttons will be injected by JS -->
+                        <p>Select a country to see its focus tree.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-<script src="game.js"></script>
+        <!-- CONFIRMATION MODAL -->
+        <div id="modal-backdrop" class="hidden">
+            <div id="modal">
+                <h3 id="modal-title">Play as this country?</h3>
+                <p id="modal-text">
+                    Do you want to start the game as <span id="modal-country-name"></span>?
+                </p>
+                <div id="modal-buttons">
+                    <button id="modal-confirm-btn">Yes</button>
+                    <button id="modal-cancel-btn">No</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER / TICK CONTROLS -->
+        <footer id="bottom-bar">
+            <button id="pause-btn">Pause</button>
+            <button id="speed-1-btn">Speed 1</button>
+            <button id="speed-2-btn">Speed 2</button>
+            <button id="speed-3-btn">Speed 3</button>
+            <span id="tick-info">Tick: 0</span>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
 </body>
 </html>
